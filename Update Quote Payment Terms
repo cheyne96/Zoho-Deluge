@@ -1,0 +1,31 @@
+
+// Get the customer record
+customerId = estimate.get("customer_id");
+organizationId = organization.get("organization_id");
+estimateId = estimate.get("estimate_id");
+response = zoho.books.getRecordsByID("Contacts",organizationId,customerId,"my_books_connection");
+info "Full API Response:";
+info response;
+customerRecord = response.get("contact");
+info "Customer Record:";
+info customerRecord;
+// Fetch the Payment Terms Label from the customer record
+paymentTermsLabel = customerRecord.get("payment_terms_label");
+info "Payment Terms Label: ";
+info paymentTermsLabel;
+// Build custom_fields list for the Estimate (Quote)
+customFieldList = list();
+fieldMap = Map();
+fieldMap.put("api_name","cf_payment_terms");
+fieldMap.put("value",paymentTermsLabel);
+// Assign the payment terms value
+customFieldList.add(fieldMap);
+// Prepare the map for the Estimate update
+estimateMap = Map();
+estimateMap.put("custom_fields",customFieldList);
+// Update the Estimate in Zoho Books
+updateEstimate = zoho.books.updateRecord("estimates",organizationId,estimateId,estimateMap,"my_books_connection");
+// Log the update response for debugging
+info "Update Estimate: ";
+info updateEstimate;
+info "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
