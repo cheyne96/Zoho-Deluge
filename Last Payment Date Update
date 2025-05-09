@@ -1,0 +1,38 @@
+
+paymentId = customer_payment.get("payment_id");
+organizationId = organization.get("organization_id");
+
+// Get the payment record
+paymentRecord = zoho.books.getRecordsByID("CustomerPayments",organizationId,paymentId).get("payment");
+info "Payent Record:";
+info paymentRecord;
+info "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+// Extract customer ID
+info "Customer Id:";
+customerId = paymentRecord.get("customer_id");
+info customerId;
+info "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+// Get last payment date
+LastPaymentDate = paymentRecord.get("date");
+info "Last Payment Date:";
+info LastPaymentDate;
+info "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+
+// Build cstom_fields list
+customFieldList = list();
+fieldMap = Map();
+fieldMap.put("label","Last Payment Date");
+fieldMap.put("value",LastPaymentDate);
+customFieldList.add(fieldMap);
+
+// Prepare map for update
+customerMap = Map();
+customerMap.put("custom_fields",customFieldList);
+
+// Update the customer with new Last Payment Date
+updateCustomer = zoho.books.updateRecord("Contacts",organizationId,customerId,customerMap,"my_books_connection");
+info "Update Customer: ";
+info updateCustomer;
+info "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
